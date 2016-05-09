@@ -54,22 +54,21 @@ packages:
   - apache2-utils
 
 runcmd:
+  - ipv4=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
   - mkdir /etc/nginx/ssl
   - chown -R root:root /etc/nginx/ssl
   - chmod -R 600 /etc/nginx/ssl
-  - IPADDR=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
-  - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt -subj /C=US/ST=NewYork/L=Brooklyn/O=AI/OU=Lab/CN=$IPADDR
+  - openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt -subj /C=US/ST=NewYork/L=Brooklyn/O=AI/OU=Lab/CN=$ipv4
+  - rm /etc/nginx/sites-enabled/default
+  - htpasswd -b -c /etc/nginx/.htpasswd kaggle test
+  - service nginx start
   - git clone https://github.com/AppliedArtificialIntelligence/CloudKaggle.git /home/kaggle/start
+  - mv -t /home/kaggle /home/kaggle/start/.bashrc /home/kaggle/start/.bash_profile
   - mkdir -m 777 /home/kaggle/analysis
-  - mv /home/kaggle/start/.bashrc /home/kaggle/.bashrc
-  - mv /home/kaggle/start/.bash_profile /home/kaggle/.bash_profile
   - mv /home/kaggle/start/kaggle_data.py /home/kaggle/analysis
   - gpasswd -a root docker
   - gpasswd -a kaggle docker
   - service docker start
-  - rm /etc/nginx/sites-enabled/default
-  - htpasswd -b -c /etc/nginx/.htpasswd kaggle test
-  - service nginx start
   - touch /home/kaggle/analysis/__init__.py
   - export PYTHONPATH="$PYTHONPATH:/home/kaggle/analysis"
   - export KAGGLE_USER=esperto007
@@ -78,6 +77,7 @@ runcmd:
   - gunzip /home/kaggle/analysis/*.gz
   - python3 -c 'from kaggle_data import data_to_hdf; data_to_hdf()'
   - chown -R kaggle:kaggle /home/kaggle
+  - docker run -d -p 8888:8888 -v /home/kaggle/analysis:/home/kaggle/analysis esperto007/kaggle
 
 ssh_keys:
   rsa_private: |

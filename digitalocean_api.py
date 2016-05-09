@@ -73,4 +73,4 @@ class DigitalOcean:
 if __name__ == '__main__':
     do = DigitalOcean()
     do.destroy()
-    do.launch()
+    # do.launch()
