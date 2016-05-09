@@ -1,5 +1,6 @@
 #cloud-config
 
+# Adding user 'kaggle'
 users:
   - name: kaggle
     groups: sudo
@@ -8,6 +9,7 @@ users:
     ssh-authorized-keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQD90FlwAAwDt+fXqk8k5WoLojCo99lEiObmgYeU6Ingm+HeGI3K7fqdWLgoG3BmKUE1aRIS9tlyN+renJepwUkeNcmV+wSoDQ3iVTUuf37b5LCiKGIzCt9YGiu75pJylgmKYrTz8mMeCaLvaS39AtS8FkfJgUEUmM7F86bkm0uZziUVM/CGaoGwRJ60NphpgUc/Ku1GbrAMp5b7jAgJJcdepAz8dMGZSULpHQ5CXGi+rPfL5GNNg8ZP42iA5RDNEMeS3NooFN53sZJnY3EZQfAmAGKABUb9TWn7EISpyKN0LP9FaCSUI5wqdEvXfWBapn2XMsCaVgG2waVMM+HCIz4aHjUHEYaF0mZcZtN0CAlqAIZruAgWDcoikRXl15afiynrScB9jxb+ZZmk9rHbQkyVV6O+UexlI9DNIY6Zh+uv0Gl1XWusf9Z8oruM9QkfaDKr4+VAkEQKPuJ+omcjfaVVPUz9psc9mlBUR8RvJpdAkrH2iE6pOi0m3dzpOyERWRp2heEIgCwuBArXSr1wanixTTEnigvMtWSp5VklVZld5UIzEeHqIHAFdYnhodDYFbuWeBnQmv23DZVZ+5egF5l7EIGIocq/JKMFfMPxd+YTUNLaVtblzeYtF/qcd5ZlFHOV9+lMbPCoLcoWDS18VBhKP4Sv0eLaABNBTUonqe/uhw== sjansen@post.harvard.edu
 
+# Creating nginx config file
 write_files:
   - path: /etc/nginx/sites-enabled/kaggle
     content: |
@@ -42,6 +44,7 @@ write_files:
             }
         }
 
+# Installing python, nginx and docker
 packages:
   - build-essential
   - python3-pip
@@ -53,6 +56,7 @@ packages:
   - docker.io
   - apache2-utils
 
+# Set up bash script to configure nginx, pull repo, run kaggle data script and create directories
 runcmd:
   - ipv4=$(curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address)
   - mkdir /etc/nginx/ssl
@@ -79,6 +83,7 @@ runcmd:
   - chown -R kaggle:kaggle /home/kaggle
   - docker run -d -p 8888:8888 -v /home/kaggle/analysis:/home/kaggle/analysis esperto007/kaggle
 
+# Add github keys
 ssh_keys:
   rsa_private: |
     -----BEGIN RSA PRIVATE KEY-----
