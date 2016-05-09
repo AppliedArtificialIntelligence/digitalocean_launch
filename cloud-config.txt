@@ -6,8 +6,7 @@ users:
     groups: sudo
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
-    ssh-authorized-keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQD90FlwAAwDt+fXqk8k5WoLojCo99lEiObmgYeU6Ingm+HeGI3K7fqdWLgoG3BmKUE1aRIS9tlyN+renJepwUkeNcmV+wSoDQ3iVTUuf37b5LCiKGIzCt9YGiu75pJylgmKYrTz8mMeCaLvaS39AtS8FkfJgUEUmM7F86bkm0uZziUVM/CGaoGwRJ60NphpgUc/Ku1GbrAMp5b7jAgJJcdepAz8dMGZSULpHQ5CXGi+rPfL5GNNg8ZP42iA5RDNEMeS3NooFN53sZJnY3EZQfAmAGKABUb9TWn7EISpyKN0LP9FaCSUI5wqdEvXfWBapn2XMsCaVgG2waVMM+HCIz4aHjUHEYaF0mZcZtN0CAlqAIZruAgWDcoikRXl15afiynrScB9jxb+ZZmk9rHbQkyVV6O+UexlI9DNIY6Zh+uv0Gl1XWusf9Z8oruM9QkfaDKr4+VAkEQKPuJ+omcjfaVVPUz9psc9mlBUR8RvJpdAkrH2iE6pOi0m3dzpOyERWRp2heEIgCwuBArXSr1wanixTTEnigvMtWSp5VklVZld5UIzEeHqIHAFdYnhodDYFbuWeBnQmv23DZVZ+5egF5l7EIGIocq/JKMFfMPxd+YTUNLaVtblzeYtF/qcd5ZlFHOV9+lMbPCoLcoWDS18VBhKP4Sv0eLaABNBTUonqe/uhw== sjansen@post.harvard.edu
+    SSH_AUTHORIZED_KEYS
 
 # Creating nginx config file
 write_files:
@@ -75,67 +74,8 @@ runcmd:
   - service docker start
   - touch /home/kaggle/analysis/__init__.py
   - export PYTHONPATH="$PYTHONPATH:/home/kaggle/analysis"
-  - export KAGGLE_USER=esperto007
-  - export KAGGLE_PASSWD=Br@sil007
-  - python3 -c 'from kaggle_data import download_data; download_data()'
-  - gunzip /home/kaggle/analysis/*.gz
-  - python3 -c 'from kaggle_data import data_to_hdf; data_to_hdf()'
+KAGGLE_CREDENTIALS
+DATA_DOWNLOAD
   - chown -R kaggle:kaggle /home/kaggle
-  - docker run -d -p 8888:8888 -v /home/kaggle/analysis:/home/kaggle/analysis esperto007/kaggle
-
-# Add github keys
-ssh_keys:
-  rsa_private: |
-    -----BEGIN RSA PRIVATE KEY-----
-    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
-    -----END RSA PRIVATE KEY-----
-
-    rsa_public: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCgBkv+x/hhIVTnv3OpUZK4Mln/4hMF2Q1t3izXKSw/kCDBHsyVn06M51EYq1RalX9ov47XKCeWRZTDnzrJHnovvgR1YIvx9Nrn5u6aN4XnonHY3+R7tZlSx9Vv1F3zyne5IG6Pua7xoXuOLPbKuJVSYwvLYiDM0MyWfju8r/9IUiH4KnZre3wgMCHed8k1Sy8Rql83TeUGVzt6bsjafEw7ZIDFnCQqAV4Cu3qkVwriU9qeF4QjHStYR003LAWNOej7NH05PqhsKC1FlkfbeX5bVLNu/gcHeKMK7786sUPxhiJhU0vPdROMMtwayHP6m/SYdLD95P3/o/TaAHzSNDk7iF707oMH4bTVDjpAr7FA/ChZ+i291yHwT6RQvPO1Rn/bWkzj7Tc3jhvYTP4NNzjWr8SXxSRQMkaV+y9TjbdR0vF1HlrFxBVUgXINJS8Q5BGzGVQsV+WYiTRffhqdHg0FBxGctyDVLxL/+XPDdifYibM/lZpcdC2sT9pB3Bd2/fOnVw4m8DiNwBwi7G4uPG235SBS4py+TZlcrtVtt7uE/5fUDENCjXxz7lI/cYvKdsWWI8Z/mE4Ksm0UBE+DWVG/iTmFAqQD1kyq2vmh0/ZisUdw26is/wbSo83v2IP2DT9jRVl2k8LzKEYwj5xzom6ikac04BfeBiqmghDfRtrHuw== sjansen@post.harvard.edu
+  - docker pull appliedai/python-ml:latest
+  - docker run -d -p 8888:8888 -v /home/kaggle/analysis:/home/kaggle/analysis appliedai/python-ml
