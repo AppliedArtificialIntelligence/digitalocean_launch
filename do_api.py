@@ -72,7 +72,5 @@ class DigitalOcean:
 
 if __name__ == '__main__':
     do = DigitalOcean()
-    # do.get_ssh_keys()
     do.destroy()
     do.launch()
-    # do.get_droplets()
